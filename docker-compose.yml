@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  masscube:
+    build: .
+    image: masscube:latest
+    volumes:
+      # Mount current directory to /data for input/output files
+      - .:/data
+    working_dir: /data
+    # Override default command to provide shell access
+    command: /bin/bash
+    stdin_open: true
+    tty: true
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  # Service for running specific masscube commands
+  masscube-cmd:
+    build: .
+    image: masscube:latest
+    volumes:
+      - .:/data
+    working_dir: /data
+    # This service can be used to run specific commands
+    # Example: docker-compose run masscube-cmd untargeted-metabolomics --help
+    entrypoint: []
