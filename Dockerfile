@@ -21,10 +21,11 @@ COPY src/ ./src/
 COPY README.md ./
 COPY LICENSE ./
 
-# Install the package using the pre-built wheel to avoid SSL issues
-COPY dist/masscube-1.2.10-py3-none-any.whl ./
-RUN pip install --no-cache-dir --upgrade pip --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org && \
-    pip install --no-cache-dir masscube-1.2.10-py3-none-any.whl --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org
+# Install build tools and build the package from source
+RUN pip install --no-cache-dir --upgrade pip build && \
+    python -m build && \
+    pip install --no-cache-dir dist/*.whl && \
+    rm -rf dist/ build/ *.egg-info/
 
 # Create a directory for data processing
 RUN mkdir -p /data
